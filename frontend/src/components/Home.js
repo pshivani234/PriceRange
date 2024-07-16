@@ -1,33 +1,53 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 import '../styles/Home.css';
 
 const Home = () => {
-  const [email,setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [url, setUrl] = useState('');
   const [name, setName] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Submitted Values:', { url, name, minPrice, maxPrice });
 
-    setUrl('');
-    setName('');
-    setMinPrice('');
-    setMaxPrice('');
-    setEmail('');
+    try {
+      const response = await axios.post('/add-product', {
+        email,
+        name,
+        url,
+        lowprice: Number(minPrice),
+        highprice: Number(maxPrice)
+      });
+
+      if (response.status === 201) {
+        toast.success('Product added to watchlist!');
+        // Optionally, clear form fields after successful submission
+        setUrl('');
+        setName('');
+        setMinPrice('');
+        setMaxPrice('');
+        setEmail('');
+      } else {
+        toast.error('Failed to add product.');
+      }
+    } catch (error) {
+      toast.error('Failed to add product. Please try again.');
+      console.error('Error:', error);
+    }
   };
 
-  const HandleLogout = () => {
-    toast.success("logged out");
+  const handleLogout = () => {
+    toast.success('Logged out');
     navigate('/');
   };
 
-  const HandleWatchList = () => {
+  const handleWatchList = () => {
     navigate('/WatchList');
   };
 
@@ -40,10 +60,10 @@ const Home = () => {
         <div className="navbar-links">
           <ul>
             <li>
-              <button onClick={HandleWatchList}>Watchlist</button>
+              <button onClick={handleWatchList}>Watchlist</button>
             </li>
             <li>
-              <button onClick={HandleLogout}>Logout</button>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           </ul>
         </div>
@@ -51,9 +71,9 @@ const Home = () => {
       <div className="main-content">
         <h2>Enter Product Details</h2>
         <form onSubmit={handleSubmit}>
-        <div>
+          <div>
             <label>Enter Email for Notification:</label>
-            <input type="email" value={email} onChange={(e) => setUrl(e.target.value)} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div>
             <label>Enter Product URL:</label>
