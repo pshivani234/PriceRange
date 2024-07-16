@@ -1,0 +1,18 @@
+.log-in {
+  max-width: 400px;
+  margin-top: 10%;
+  margin-left: 30%;
+  margin-bottom: 0%;
+  padding: 12px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+}
+
+.log-in input{
+  border-radius: 40px;
+}
+.log-in button{
+  padding: 10px 50px;
+  margin-left: 0%;
+  margin-top: 0%;
+}

@@ -1,0 +1,15 @@
+.card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.card:hover {
+  transform: scale(1.05); /* Zoom effect */
+}
