@@ -91,7 +91,7 @@ while True:
             product_collection.update_one(
                 {'_id':product['_id']},
                 {
-                    '$set': {price}: current_price
+                    '$set': {'price': current_price}
                 }
             )
             if count > 1:
