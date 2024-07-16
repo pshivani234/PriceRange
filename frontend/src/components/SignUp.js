@@ -1,26 +1,27 @@
 import React, { useRef, useState } from 'react';
-import {toast} from 'react-hot-toast'
+import { toast } from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import '../styles/SignUp.css'
+import axios from 'axios';
+import '../styles/SignUp.css';
 
 const SignUp = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
-  const [showPassword, setShowPassword] = useState(false); 
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleTogglePassword = () => {
-    setShowPassword(!showPassword); 
+    setShowPassword(!showPassword);
   };
 
   const handleToggleConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSignIn = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
@@ -31,20 +32,29 @@ const SignUp = () => {
       return;
     }
 
-    if (password === confirmPassword) {
-      console.log('Email:', email);
-      console.log('Password:', password);
-      toast.success('Sign up successful!');
-    } else {
+    if (password !== confirmPassword) {
       toast.error('Passwords do not match!');
+      return;
     }
-    navigate('/Home')
+
+    try {
+      const response = await axios.post('/signup', { email, password });
+      if (response.status === 201) {
+        toast.success('Sign up successful!');
+        navigate('/Home');
+      } else {
+        toast.error(response.data);
+      }
+    } catch (error) {
+      toast.error('Sign up failed. Please try again.');
+      console.error('Error signing up:', error);
+    }
   };
 
   return (
     <div className='sign-up'>
       <h2>Sign Up</h2>
-      <form onSubmit={handleSignIn}>
+      <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label>Email:</label>
           <input type="email" ref={emailRef} />
@@ -67,9 +77,8 @@ const SignUp = () => {
             </span>
           </div>
         </div>
-        <button onClick={handleSignIn} type="submit">Sign Up</button>
+        <button type="submit">Sign Up</button>
       </form>
-      
     </div>
   );
 }

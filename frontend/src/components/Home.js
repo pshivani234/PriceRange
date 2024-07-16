@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import '../styles/Home.css';
 
 const Home = () => {
+  const [email,setEmail] = useState('');
   const [url, setUrl] = useState('');
   const [name, setName] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -18,6 +19,7 @@ const Home = () => {
     setName('');
     setMinPrice('');
     setMaxPrice('');
+    setEmail('');
   };
 
   const HandleLogout = () => {
@@ -49,6 +51,10 @@ const Home = () => {
       <div className="main-content">
         <h2>Enter Product Details</h2>
         <form onSubmit={handleSubmit}>
+        <div>
+            <label>Enter Email for Notification:</label>
+            <input type="email" value={email} onChange={(e) => setUrl(e.target.value)} />
+          </div>
           <div>
             <label>Enter Product URL:</label>
             <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
