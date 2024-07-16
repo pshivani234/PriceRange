@@ -88,6 +88,12 @@ while True:
 
             current_price = check_price(urlpassed)
             print(current_price)
+            product_collection.update_one(
+                {'_id':product['_id']},
+                {
+                    '$set': {price}: current_price
+                }
+            )
             if count > 1:
                 flag = price_decrease_check(current_price, lowerprice, higherprice)
                 if flag:

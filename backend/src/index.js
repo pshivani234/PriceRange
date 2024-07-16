@@ -79,21 +79,22 @@ app.post('/add-product', async (req, res) => {
 
 app.get('/products', async (req, res) => {
     const userEmail = req.query.email; // Assuming the email is passed as a query parameter
-
+  
     try {
-        // Query products based on user's email
-        const products = await ProductCollection.find({ email: userEmail });
-
-        if (!products) {
-            return res.status(404).json({ message: 'No products found for this user' });
-        }
-
-        res.status(200).json(); // Respond with JSON array of products
+      // Query products based on user's email
+      const products = await ProductCollection.find({ email: userEmail });
+  
+      if (products.length === 0) {
+        return res.status(404).json({ message: 'No products found for this user' });
+      }
+  
+      res.status(200).json(products); // Respond with JSON array of products
     } catch (error) {
-        console.error('Error retrieving products:', error);
-        res.status(500).send('Failed to retrieve products');
+      console.error('Error retrieving products:', error);
+      res.status(500).send('Failed to retrieve products');
     }
-});
+  });
+  
 
 
 
