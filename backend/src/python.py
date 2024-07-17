@@ -74,11 +74,15 @@ while True:
             # Send initial registration email
             #if count == 1:
             if not registration_email_sent:
-                msg = f"""Hello user,
-    You have successfully registered {productName}
-    {urlpassed} 
-    to track the price.
-    We will keep you updated."""
+                msg = f"""Dear User,
+
+Thank you for registering {productName} on PriceRange to track its price. You can find the product link here: {urlpassed}. Our system will diligently monitor the price fluctuations and notify you promptly via email as soon as the product price falls within your specified range.
+
+Thank you once again for choosing PriceRange for your price tracking needs.
+
+Best regards,
+
+PriceRange Team."""
                 send_email(msg, receiver_email)
                 print("Registration mail sent")
                 product_collection.update_one(
@@ -98,9 +102,19 @@ while True:
                 flag = price_decrease_check(current_price, lowerprice, higherprice)
                 if flag:
                     decrease = prices_list[-1] - prices_list[-2]
-                    message = f"The price has decreased. Please check the item. The price decreased by {decrease} rupees."
+                    message = f"""Dear User,
+
+We are pleased to inform you that the price of the product {productName} has fallen into your desired range. We recommend you check the item at your earliest convenience.
+
+The price has decreased by {decrease} from the previous price.
+
+Thank you for using PriceRange to monitor your product prices.
+
+Best regards,
+
+The PriceRange Team"""
                     send_email(message, receiver_email)
-                    print("Successfully sent price decrease email!")
+                    print("Successfully sent price range email!")
             time.sleep(10)
         count += 1
     except Exception as e:
