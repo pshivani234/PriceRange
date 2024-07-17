@@ -52,8 +52,6 @@ app.post('/add-product', async (req, res) => {
   try {
     const { email,name, url, lowprice, highprice } = req.body;
 
-    //const email = localStorage.getItem('loggedInUserEmail');
-
     const checked = await ProductCollection.findOne({ url: req.body.url })
     if (checked) {
         return res.send("Product already exists");
@@ -80,6 +78,7 @@ app.post('/add-product', async (req, res) => {
   }
 });
 
+//query to get products
 app.get('/products', async (req, res) => {
     const userEmail = req.query.email; // email is passed as a query parameter
   
