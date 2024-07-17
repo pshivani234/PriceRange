@@ -40,6 +40,7 @@ const SignUp = () => {
     try {
       const response = await axios.post('/signup', { email, password });
       if (response.status === 201) {
+        localStorage.setItem('loggedInUserEmail', email);
         toast.success('Sign up successful!');
         navigate('/Home');
       } else {

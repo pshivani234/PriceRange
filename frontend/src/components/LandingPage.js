@@ -16,9 +16,10 @@ const LandingPage = () => {
     <div className='home'>
       <div className='title'>
         <h1>Price Range</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          <br />Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-          <br />Sed nisi. Nulla quis sem at nibh elementum imperdiet.
+        <p>Your Personalized Price Tracking Hub
+          <br />Track Amazon prices effortlessly! 
+          <br />Enter the product URL, set your price range, 
+          <br />and get notified when it hits your target.
         </p>
       </div>
       <div className='separator'></div>

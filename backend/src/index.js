@@ -1,4 +1,3 @@
-// Your Express app setup (app.js or index.js)
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -48,37 +47,41 @@ app.post('/login', async (req, res) => {
 
 
 
-// POST route to add a product
+// to add a product
 app.post('/add-product', async (req, res) => {
   try {
-    const { email, name, url, lowprice, highprice } = req.body;
+    const { email,name, url, lowprice, highprice } = req.body;
 
-    // Check if the email exists in your database (optional, based on your application logic)
-    // This is to ensure you associate the product with the correct user if needed
-    // Example: const user = await LogInCollection.findOne({ email });
+    //const email = localStorage.getItem('loggedInUserEmail');
 
-    // Create a new product document
-    const newProduct = new ProductCollection({
-      email,
-      name,
-      url,
-      lowprice,
-      highprice
-    });
+    const checked = await ProductCollection.findOne({ url: req.body.url })
+    if (checked) {
+        return res.send("Product already exists");
+    }
+    else{
+      const newProduct = new ProductCollection({
+        email,
+        name,
+        url,
+        lowprice,
+        highprice
+      });
 
-    // Save the product to the database
-    await newProduct.save();
+      // Save the product to the database
+      await newProduct.save();
 
-    // Respond with a success message or status code
-    res.status(201).send('Product added successfully');
-  } catch (error) {
+      // Respond with a success message or status code
+      res.status(201).send('Product added successfully');
+    }
+  } 
+  catch (error) {
     console.error('Error adding product:', error);
     res.status(500).send('Failed to add product');
   }
 });
 
 app.get('/products', async (req, res) => {
-    const userEmail = req.query.email; // Assuming the email is passed as a query parameter
+    const userEmail = req.query.email; // email is passed as a query parameter
   
     try {
       // Query products based on user's email
@@ -95,7 +98,24 @@ app.get('/products', async (req, res) => {
     }
   });
   
-
+  // to delete product
+  app.delete('/delete-product/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Find the product by ID and delete it
+      const deletedProduct = await ProductCollection.findByIdAndDelete(id);
+  
+      if (!deletedProduct) {
+        return res.status(404).send('Product not found');
+      }
+  
+      res.status(200).send('Product deleted successfully');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      res.status(500).send('Failed to delete product');
+    }
+  });
 
 
 app.listen(port, () => {

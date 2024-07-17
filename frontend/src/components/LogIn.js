@@ -22,6 +22,7 @@ const LogIn = () => {
     try {
       const response = await axios.post('/login', { email, password });
       if (response.status === 200) {
+        localStorage.setItem('loggedInUserEmail', email);
         toast.success('Log in successful!');
         navigate('/Home');
       } else {
