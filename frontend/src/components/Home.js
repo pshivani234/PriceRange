@@ -8,20 +8,18 @@ const Home = () => {
   const email = localStorage.getItem('loggedInUserEmail');
   const [url, setUrl] = useState('');
   const [name, setName] = useState('');
-  const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted Values:', { url, name, minPrice, maxPrice });
+    console.log('Submitted Values:', { url, name, maxPrice });
 
     try {
       const response = await axios.post('/add-product', {
         email,
         name,
         url,
-        lowprice: Number(minPrice),
         highprice: Number(maxPrice)
       });
 
@@ -30,7 +28,6 @@ const Home = () => {
         // Optionally, clear form fields after successful submission
         setUrl('');
         setName('');
-        setMinPrice('');
         setMaxPrice('');
       } else {
         toast.error('Failed to add product.');
@@ -79,8 +76,7 @@ const Home = () => {
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label>Enter Price Range:</label>
-            <input type="number" placeholder="Min Price" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
+            <label>Enter Upper Limit:</label>
             <input type="number" placeholder="Max Price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
           </div>
           <button type="submit">Add to Watchlist</button>

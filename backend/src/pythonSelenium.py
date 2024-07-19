@@ -1,3 +1,7 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+
 import pymongo
 import bs4
 import urllib.request
@@ -17,18 +21,26 @@ prices_list = []
 def check_price(urlpassed):
     url = urlpassed
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    req = urllib.request.Request(url, headers=headers)
+    options = Options()
+    options.headless = True  # Run headless Chrome
+    service = Service("C:/Users/shivani/Downloads/chromedriver-win64/chromedriver.exe")  # Path to chromedrive
+
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get(url)
 
     try:
-        sauce = urllib.request.urlopen(req).read()
-        soup = bs4.BeautifulSoup(sauce, "html.parser")
-        prices = soup.find(class_="a-price-whole").get_text()
-        prices = float(prices.replace(",", "").replace("₹", ""))
-        prices_list.append(prices)
-        return prices
+
+        driver.implicitly_wait(10)
+        soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
+        price_element = soup.find(class_="a-price-whole")
+        if price_element:
+            prices = price_element.get_text()
+            prices = float(prices.replace(",", "").replace("₹", ""))
+            prices_list.append(prices)
+            return prices
+        else:
+            print("Price element not found")
+            return None
     except urllib.error.HTTPError as e:
         print(f"HTTPError: {e.code} - {e.reason}")
         return None
@@ -40,7 +52,7 @@ def send_email(message, receiver_email):
     email_sender = 'pingilishivanireddy234@gmail.com'
     email_password = 'hflo kmds koxg wakz'
     email_receiver = receiver_email
-    subject = 'PriceRange: Your personal tracking hub'
+    subject = 'Price Watch: Your personal tracking hub'
     body = message
 
     em = EmailMessage()
@@ -54,8 +66,8 @@ def send_email(message, receiver_email):
         smtp.login(email_sender, email_password)
         smtp.sendmail(email_sender, email_receiver, em.as_string())
 
-def price_decrease_check(current_price, lowerprice, higherprice):
-    return lowerprice < current_price < higherprice
+def price_decrease_check(current_price, higherprice):
+    return current_price < higherprice
 
 count=1
 while True:
@@ -66,7 +78,6 @@ while True:
         for product in products:
             print("product")
             urlpassed = product['url']
-            lowerprice = product['lowprice']
             higherprice = product['highprice']
             receiver_email = product['email']
             productName = product['name']
@@ -76,13 +87,13 @@ while True:
             if not registration_email_sent:
                 msg = f"""Dear User,
 
-Thank you for registering {productName} on PriceRange to track its price. You can find the product link here: {urlpassed}. Our system will diligently monitor the price fluctuations and notify you promptly via email as soon as the product price falls within your specified range.
+Thank you for registering {productName} on Price Watch to track its price. You can find the product link here: {urlpassed}. Our system will diligently monitor the price fluctuations and notify you promptly via email as soon as the product price falls within your specified limit.
 
-Thank you once again for choosing PriceRange for your price tracking needs.
+Thank you once again for choosing Price Watch for your price tracking needs.
 
 Best regards,
 
-PriceRange Team."""
+Price Watch Team."""
                 send_email(msg, receiver_email)
                 print("Registration mail sent")
                 product_collection.update_one(
@@ -99,20 +110,20 @@ PriceRange Team."""
                 }
             )
             if count > 1:
-                flag = price_decrease_check(current_price, lowerprice, higherprice)
+                flag = price_decrease_check(current_price, higherprice)
                 if flag:
                     decrease = prices_list[-1] - prices_list[-2]
                     message = f"""Dear User,
 
-We are pleased to inform you that the price of the product {productName} has fallen into your desired range. We recommend you check the item at your earliest convenience.
+We are pleased to inform you that the price of the product {productName} has fallen under your desired Limit. We recommend you check the item at your earliest convenience.
 
 The price has decreased by {decrease} from the previous price.
 
-Thank you for using PriceRange to monitor your product prices.
+Thank you for using Price Watch to monitor your product prices.
 
 Best regards,
 
-The PriceRange Team"""
+The Price Watch Team"""
                     send_email(message, receiver_email)
                     print("Successfully sent price range email!")
             time.sleep(10)

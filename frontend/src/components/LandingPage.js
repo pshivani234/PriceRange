@@ -15,10 +15,10 @@ const LandingPage = () => {
   return (
     <div className='home'>
       <div className='title'>
-        <h1>Price Range</h1>
+        <h1>Price Watch</h1>
         <p>Your Personalized Price Tracking Hub
           <br />Track Amazon prices effortlessly! 
-          <br />Enter the product URL, set your price range, 
+          <br />Enter the product URL, set your price Upper Limit, 
           <br />and get notified when it hits your target.
         </p>
       </div>

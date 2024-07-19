@@ -50,7 +50,7 @@ app.post('/login', async (req, res) => {
 // to add a product
 app.post('/add-product', async (req, res) => {
   try {
-    const { email,name, url, lowprice, highprice } = req.body;
+    const { email, name, url, highprice } = req.body;
 
     const checked = await ProductCollection.findOne({ url: req.body.url })
     if (checked) {
@@ -61,7 +61,6 @@ app.post('/add-product', async (req, res) => {
         email,
         name,
         url,
-        lowprice,
         highprice
       });
 
