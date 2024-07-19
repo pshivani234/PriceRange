@@ -51,7 +51,7 @@ const Home = () => {
     <div>
       <nav className="navbar">
         <div className="navbar-title">
-          <h1>Price Range</h1>
+          <h1>Price Watch</h1>
         </div>
         <div className="navbar-links">
           <ul>
